@@ -5,10 +5,40 @@ from pydantic import BaseModel, Field
 
 from app.models import Category, Item
 
+description = """
+Demo API is awesome.
+
+## Items
+
+You can **read items**
+
+## Users
+
+You will be able to:
+
+* **Create users**
+* **Read users**
+
+"""
+
+tags_metadata = [
+    dict(
+        name="items",
+        description="Manage items. So _fancy_ the have their own docs."
+    )
+]
+
 app = FastAPI(
     title="FastAPI, Docker, and Traefik",
-    description="This is my description",
-    version="0.1.0")
+    description=description,
+    version="0.1.0",
+    contact=dict(
+        name="Contact Name",
+        url="https://github.com/patrickschlaepfer/fastapi-docker-traefik",
+        email="patrick@schlaepfer.com"
+    ),
+    openapi_tags=tags_metadata
+    )
 
 items = {
     0: Item(name="Hammer", price=9.99, count=20, id=0, category=Category.TOOLS)
@@ -16,11 +46,11 @@ items = {
 
 # FastAPI handles JSON serialization and deserialization for us.
 # We can simply use built-in python and pydantic types, in this case dict[int, Item].
-@app.get("/")
-def index() -> dict[str, dict[int, Item]]:
+@app.get("/items", tags=["items"])
+async def index() -> dict[str, dict[int, Item]]:
     return {"items": items}
 
-@app.get("/items/{item_id}")
+@app.get("/items/{item_id}", tags=["items"])
 def query_item_by_id(item_id: int) -> Item:
     if item_id not in items:
         raise HTTPException(
@@ -34,7 +64,7 @@ Selection = dict[
     str, str | int | float | Category | None
 ] # dictionary containing the user's query arguments
 
-@app.get("/items/")
+@app.get("/items/", tags=["items"])
 def query_item_by_parameters(
     name: str | None = None,
     price: float | None = None,
@@ -56,7 +86,7 @@ def query_item_by_parameters(
         "selection": selection,
     }
 
-@app.post("/")
+@app.post("/items", tags=["items"])
 def add_item(item: Item) -> dict[str, Item]:
 
     if item.id in items:
@@ -65,7 +95,7 @@ def add_item(item: Item) -> dict[str, Item]:
     items[item.id] = item
     return {"added": item}
 
-@app.delete("/items/{item_id}")
+@app.delete("/items/{item_id}", tags=["items"])
 def delete_item(item_id: int) -> dict[str, Item]:
 
     if item_id not in items:
