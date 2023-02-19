@@ -5,8 +5,8 @@ version: '3.8'
 services:
   web:
     build: .
-    command: uvicorn app.main:app --host 0.0.0.0
+    command: uvicorn api.main:app --host 0.0.0.0
     volumes:
-      - .:/app
+      - ./src:/app
     ports:
       - 8008:8000

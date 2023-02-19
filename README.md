@@ -17,7 +17,7 @@ Keep uvicorn reloading changes
 
 Build the docker images
 
-    $ docker-compose build
+    $ docker-compose build –no-cache
 
 Run the docker image
 
