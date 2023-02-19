@@ -51,7 +51,7 @@ async def index() -> dict[str, dict[int, Item]]:
     return {"items": items}
 
 @app.get("/items/{item_id}", tags=["items"])
-def query_item_by_id(item_id: int) -> Item:
+async def query_item_by_id(item_id: int) -> Item:
     if item_id not in items:
         raise HTTPException(
             status_code=404, detail=f"Item with {item_id=} does not exist."
@@ -65,7 +65,7 @@ Selection = dict[
 ] # dictionary containing the user's query arguments
 
 @app.get("/items/", tags=["items"])
-def query_item_by_parameters(
+async def query_item_by_parameters(
     name: str | None = None,
     price: float | None = None,
     count: int | None = None,
@@ -87,7 +87,7 @@ def query_item_by_parameters(
     }
 
 @app.post("/items", tags=["items"])
-def add_item(item: Item) -> dict[str, Item]:
+async def add_item(item: Item) -> dict[str, Item]:
 
     if item.id in items:
         HTTPException(status_code=400, detail=f"Item with {item.id=} already exists.")
@@ -96,7 +96,7 @@ def add_item(item: Item) -> dict[str, Item]:
     return {"added": item}
 
 @app.delete("/items/{item_id}", tags=["items"])
-def delete_item(item_id: int) -> dict[str, Item]:
+async def delete_item(item_id: int) -> dict[str, Item]:
 
     if item_id not in items:
         raise HTTPException(

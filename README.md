@@ -34,7 +34,13 @@ Stop the docker image
 
 The swagger docs are available at
 
-http://<hostname>:<port>/docs
+    http://<hostname>:<port>/docs
+
+## Redoc
+
+The redoc you find
+
+    http://<hostname>:<port>/redoc
 
 
 
